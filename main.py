@@ -2,6 +2,7 @@ from PyQt6.QtWidgets import QApplication, QTableWidgetItem, QMainWindow, QTableW
 import sys
 
 from add_student_dialog import AddStudentDialog
+from search_by_name_dialog import SearchByNameDialog
 from storage import Storage
 
 
@@ -13,6 +14,9 @@ class MainWindow(QMainWindow):
         file_menu_item = self.menuBar().addMenu("&File")
         add_student_action = file_menu_item.addAction("Add Student")
         add_student_action.triggered.connect(self.add_student)
+        edit_menu_item = self.menuBar().addMenu("&Edit")
+        search_menu_action = edit_menu_item.addAction("Search")
+        search_menu_action.triggered.connect(self.search_by_name)
         help_menu_item = self.menuBar().addMenu("&Help")
         about_action = help_menu_item.addAction("About")
 
@@ -36,6 +40,10 @@ class MainWindow(QMainWindow):
         dialog.exec()
         self.table.clear()
         self.load_data()
+
+    def search_by_name(self) -> None:
+        dialog = SearchByNameDialog()
+        dialog.exec()
 
 
 app = QApplication(sys.argv)
