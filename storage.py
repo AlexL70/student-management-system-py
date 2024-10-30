@@ -29,3 +29,12 @@ class Storage:
             (student.name, student.course, student.mobile))
         connection.commit()
         connection.close()
+
+    @staticmethod
+    def search_by_name(name: str) -> list:
+        connection = Storage.__get_connection()
+        cursor = connection.cursor().execute(
+            "SELECT * FROM students WHERE name = ?", (name,))
+        data = cursor.fetchall()
+        connection.close()
+        return data

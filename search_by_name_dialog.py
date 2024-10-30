@@ -1,5 +1,7 @@
 from PyQt6.QtWidgets import QDialog, QVBoxLayout, QLineEdit, QPushButton
 
+from storage import Storage
+
 
 class SearchByNameDialog(QDialog):
     def __init__(self) -> None:
@@ -20,4 +22,6 @@ class SearchByNameDialog(QDialog):
 
     def search_student_by_name(self) -> None:
         """Search student by name."""
+        self.name = self.student_name.text()
+        self.data = Storage.search_by_name(self.name)
         self.close()

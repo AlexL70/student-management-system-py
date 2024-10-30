@@ -1,3 +1,4 @@
+from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QApplication, QTableWidgetItem, QMainWindow, QTableWidget
 import sys
 
@@ -44,6 +45,12 @@ class MainWindow(QMainWindow):
     def search_by_name(self) -> None:
         dialog = SearchByNameDialog()
         dialog.exec()
+        rows = dialog.data
+        print(rows)
+        items = self.table.findItems(
+            dialog.name, Qt.MatchFlag.MatchFixedString)
+        for item in items:
+            self.table.item(item.row(), 1).setSelected(True)
 
 
 app = QApplication(sys.argv)
