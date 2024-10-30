@@ -1,8 +1,8 @@
-from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QApplication, QTableWidgetItem, QMainWindow, QTableWidget
 import sys
-import os
-import sqlite3
+
+from add_student_dialog import AddStudentDialog
+from storage import Storage
 
 
 class MainWindow(QMainWindow):
@@ -11,9 +11,10 @@ class MainWindow(QMainWindow):
         self.setWindowTitle("Studend Management System")
 
         file_menu_item = self.menuBar().addMenu("&File")
-        addStudentAction = file_menu_item.addAction("Add Student")
+        add_student_action = file_menu_item.addAction("Add Student")
+        add_student_action.triggered.connect(self.add_student)
         help_menu_item = self.menuBar().addMenu("&Help")
-        aboutAction = help_menu_item.addAction("About")
+        about_action = help_menu_item.addAction("About")
 
         self.table = QTableWidget()
         self.table.setColumnCount(4)
@@ -22,15 +23,19 @@ class MainWindow(QMainWindow):
         self.table.verticalHeader().setVisible(False)
         self.setCentralWidget(self.table)
 
-    def load_data(self):
-        connection = sqlite3.connect("database.db")
-        data = connection.execute("SELECT * FROM students")
+    def load_data(self) -> None:
+        data = Storage.load_data()
         for row_num, row_data in enumerate(data):
             self.table.insertRow(row_num)
             for col_num, col_data in enumerate(row_data):
                 self.table.setItem(
                     row_num, col_num, QTableWidgetItem(str(col_data)))
-        connection.close()
+
+    def add_student(self) -> None:
+        dialog = AddStudentDialog()
+        dialog.exec()
+        self.table.clear()
+        self.load_data()
 
 
 app = QApplication(sys.argv)
