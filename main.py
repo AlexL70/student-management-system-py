@@ -1,5 +1,6 @@
 from PyQt6.QtCore import Qt
-from PyQt6.QtWidgets import QApplication, QTableWidgetItem, QMainWindow, QTableWidget
+from PyQt6.QtWidgets import QApplication, QTableWidgetItem, QMainWindow, QTableWidget, QToolBar
+from PyQt6.QtGui import QAction, QIcon
 import sys
 
 from add_student_dialog import AddStudentDialog
@@ -11,13 +12,17 @@ class MainWindow(QMainWindow):
     def __init__(self) -> None:
         super().__init__()
         self.setWindowTitle("Studend Management System")
+        self.setMinimumSize(800, 600)
 
         file_menu_item = self.menuBar().addMenu("&File")
-        add_student_action = file_menu_item.addAction("Add Student")
+        add_student_action = QAction(
+            QIcon("icons/add.png"), "Add Student", self)
+        file_menu_item.addAction(add_student_action)
         add_student_action.triggered.connect(self.add_student)
         edit_menu_item = self.menuBar().addMenu("&Edit")
-        search_menu_action = edit_menu_item.addAction("Search")
-        search_menu_action.triggered.connect(self.search_by_name)
+        search_action = QAction(QIcon("icons/search.png"), "Search", self)
+        edit_menu_item.addAction(search_action)
+        search_action.triggered.connect(self.search_by_name)
         help_menu_item = self.menuBar().addMenu("&Help")
         about_action = help_menu_item.addAction("About")
 
@@ -27,6 +32,13 @@ class MainWindow(QMainWindow):
             ["ID", "Name", "Course", "Mobile"])
         self.table.verticalHeader().setVisible(False)
         self.setCentralWidget(self.table)
+
+        # Create a toolbar and add buttons to it
+        toolbar = QToolBar()
+        toolbar.setMovable(True)
+        self.addToolBar(toolbar)
+        toolbar.addAction(add_student_action)
+        toolbar.addAction(search_action)
 
     def load_data(self) -> None:
         data = Storage.load_data()
@@ -46,7 +58,6 @@ class MainWindow(QMainWindow):
         dialog = SearchByNameDialog()
         dialog.exec()
         rows = dialog.data
-        print(rows)
         items = self.table.findItems(
             dialog.name, Qt.MatchFlag.MatchFixedString)
         for item in items:

@@ -32,7 +32,7 @@ class AddStudentDialog(QDialog):
         self.mobile_number.setPlaceholderText("Mobile")
         self.layout.addWidget(self.mobile_number)
 
-        submit = QPushButton("Submit")
+        submit = QPushButton("Register")
         submit.clicked.connect(self.add_student)
         self.layout.addWidget(submit)
 
