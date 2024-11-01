@@ -1,11 +1,5 @@
 import sqlite3
-
-
-class Student:
-    def __init__(self, name: str, course: str, mobile: str) -> None:
-        self.name = name
-        self.course = course
-        self.mobile = mobile
+from data_transfer_objects import Student
 
 
 class Storage:
@@ -27,6 +21,15 @@ class Storage:
         connection.cursor().execute(
             "INSERT INTO students (name, course, mobile) VALUES (?, ?, ?)",
             (student.name, student.course, student.mobile))
+        connection.commit()
+        connection.close()
+
+    @staticmethod
+    def edit_student(student: Student) -> None:
+        connection = Storage.__get_connection()
+        connection.cursor().execute(
+            "UPDATE students SET name = ?, course = ?, mobile = ? WHERE id = ?",
+            (student.name, student.course, student.mobile, student.student_id))
         connection.commit()
         connection.close()
 

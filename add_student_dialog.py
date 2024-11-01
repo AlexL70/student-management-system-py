@@ -1,15 +1,8 @@
 from enum import Enum
 from PyQt6.QtWidgets import QDialog, QVBoxLayout, QLineEdit, QComboBox, QPushButton
 
-from storage import Storage, Student
-
-
-class Courses(Enum):
-    BIOLOGY = "Biology"
-    MATH = "Math"
-    ASTRONOMY = "Astronomy"
-    PHYSICS = "Physics"
-    PYTHON = "Python"
+from storage import Storage
+from data_transfer_objects import Student, Courses
 
 
 class AddStudentDialog(QDialog):

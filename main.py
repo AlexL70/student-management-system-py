@@ -4,6 +4,7 @@ from PyQt6.QtGui import QAction, QIcon
 import sys
 
 from add_student_dialog import AddStudentDialog
+from data_transfer_objects import Student
 from delete_dialog import DeleteDialog
 from edit_dialog import EditDialog
 from search_by_name_dialog import SearchByNameDialog
@@ -62,6 +63,23 @@ class MainWindow(QMainWindow):
         self.table.clear()
         self.load_data()
 
+    def edit_student(self) -> None:
+        row_index = self.table.currentRow()
+        student = Student(
+            self.table.item(row_index, 1).text(),
+            self.table.item(row_index, 2).text(),
+            self.table.item(row_index, 3).text(),
+            int(self.table.item(row_index, 0).text()))
+        dialog = EditDialog(student=student)
+        dialog.exec()
+        self.__remove_old_buttons__()
+        self.table.clear()
+        self.load_data()
+
+    def delete_student(self) -> None:
+        dialog = DeleteDialog()
+        dialog.exec()
+
     def search_by_name(self) -> None:
         dialog = SearchByNameDialog()
         dialog.exec()
@@ -71,25 +89,19 @@ class MainWindow(QMainWindow):
         for item in items:
             self.table.item(item.row(), 1).setSelected(True)
 
-    def cell_clicked(self, row: int, column: int) -> None:
+    def __remove_old_buttons__(self) -> None:
         old_buttons = self.status_bar.findChildren(QPushButton)
         for button in old_buttons:
             button.deleteLater()
 
+    def cell_clicked(self, row: int, column: int) -> None:
+        self.__remove_old_buttons__()
         edit_button = QPushButton("Edit record")
         edit_button.clicked.connect(self.edit_student)
         self.status_bar.addWidget(edit_button)
         delete_button = QPushButton("Delete record")
         delete_button.clicked.connect(self.delete_student)
         self.status_bar.addWidget(delete_button)
-
-    def edit_student(self) -> None:
-        dialog = EditDialog()
-        dialog.exec()
-
-    def delete_student(self) -> None:
-        dialog = DeleteDialog()
-        dialog.exec()
 
 
 app = QApplication(sys.argv)
