@@ -1,9 +1,11 @@
 from PyQt6.QtCore import Qt
-from PyQt6.QtWidgets import QApplication, QTableWidgetItem, QMainWindow, QTableWidget, QToolBar
+from PyQt6.QtWidgets import QApplication, QTableWidgetItem, QMainWindow, QTableWidget, QToolBar, QStatusBar, QPushButton
 from PyQt6.QtGui import QAction, QIcon
 import sys
 
 from add_student_dialog import AddStudentDialog
+from delete_dialog import DeleteDialog
+from edit_dialog import EditDialog
 from search_by_name_dialog import SearchByNameDialog
 from storage import Storage
 
@@ -40,6 +42,12 @@ class MainWindow(QMainWindow):
         toolbar.addAction(add_student_action)
         toolbar.addAction(search_action)
 
+        # Set the status bar
+        self.status_bar = QStatusBar()
+        self.setStatusBar(self.status_bar)
+        # Detect a cell click event
+        self.table.cellClicked.connect(self.cell_clicked)
+
     def load_data(self) -> None:
         data = Storage.load_data()
         for row_num, row_data in enumerate(data):
@@ -62,6 +70,26 @@ class MainWindow(QMainWindow):
             dialog.name, Qt.MatchFlag.MatchFixedString)
         for item in items:
             self.table.item(item.row(), 1).setSelected(True)
+
+    def cell_clicked(self, row: int, column: int) -> None:
+        old_buttons = self.status_bar.findChildren(QPushButton)
+        for button in old_buttons:
+            button.deleteLater()
+
+        edit_button = QPushButton("Edit record")
+        edit_button.clicked.connect(self.edit_student)
+        self.status_bar.addWidget(edit_button)
+        delete_button = QPushButton("Delete record")
+        delete_button.clicked.connect(self.delete_student)
+        self.status_bar.addWidget(delete_button)
+
+    def edit_student(self) -> None:
+        dialog = EditDialog()
+        dialog.exec()
+
+    def delete_student(self) -> None:
+        dialog = DeleteDialog()
+        dialog.exec()
 
 
 app = QApplication(sys.argv)
