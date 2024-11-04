@@ -3,6 +3,7 @@ from PyQt6.QtWidgets import QApplication, QTableWidgetItem, QMainWindow, QTableW
 from PyQt6.QtGui import QAction, QIcon
 import sys
 
+from about_dialog import AboutDialog
 from add_student_dialog import AddStudentDialog
 from data_transfer_objects import Student
 from delete_dialog import DeleteDialog
@@ -28,6 +29,7 @@ class MainWindow(QMainWindow):
         search_action.triggered.connect(self.search_by_name)
         help_menu_item = self.menuBar().addMenu("&Help")
         about_action = help_menu_item.addAction("About")
+        about_action.triggered.connect(self.show_about_dialog)
 
         self.table = QTableWidget()
         self.table.setColumnCount(4)
@@ -111,6 +113,10 @@ class MainWindow(QMainWindow):
         delete_button = QPushButton("Delete record")
         delete_button.clicked.connect(self.delete_student)
         self.status_bar.addWidget(delete_button)
+
+    def show_about_dialog(self) -> None:
+        dialog = AboutDialog()
+        dialog.exec()
 
 
 app = QApplication(sys.argv)
