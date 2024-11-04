@@ -2,6 +2,7 @@ show databases;
 CREATE DATABASE school;
 SHOW TABLES FROM school;
 USE school;
+GRANT ALL PRIVILEGES ON school.* TO 'alexl70';
 CREATE TABLE students(
 id INT AUTO_INCREMENT PRIMARY KEY,
 name VARCHAR(255),
