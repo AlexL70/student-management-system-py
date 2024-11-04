@@ -1,0 +1,10 @@
+services:
+  mysql:
+    image: mysql:9.1.0
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: mydb
+      MYSQL_USER: alexl70
+      MYSQL_PASSWORD: alexl70
+    ports:
+      - "3306:3306"
