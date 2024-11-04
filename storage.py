@@ -34,6 +34,14 @@ class Storage:
         connection.close()
 
     @staticmethod
+    def delete_student(student: Student) -> None:
+        connection = Storage.__get_connection()
+        connection.cursor().execute(
+            "DELETE FROM students WHERE id = ?", (student.student_id,))
+        connection.commit()
+        connection.close()
+
+    @staticmethod
     def search_by_name(name: str) -> list:
         connection = Storage.__get_connection()
         cursor = connection.cursor().execute(

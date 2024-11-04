@@ -77,8 +77,17 @@ class MainWindow(QMainWindow):
         self.load_data()
 
     def delete_student(self) -> None:
-        dialog = DeleteDialog()
+        row_index = self.table.currentRow()
+        student = Student(
+            self.table.item(row_index, 1).text(),
+            self.table.item(row_index, 2).text(),
+            self.table.item(row_index, 3).text(),
+            int(self.table.item(row_index, 0).text()))
+        dialog = DeleteDialog(student=student)
         dialog.exec()
+        self.__remove_old_buttons__()
+        self.table.clear()
+        self.load_data()
 
     def search_by_name(self) -> None:
         dialog = SearchByNameDialog()
